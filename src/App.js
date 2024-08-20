@@ -19,6 +19,7 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+          
           <Route path="/giriş" element={<><Giris/></>} />
           <Route path="/çıkış" element={<><Cikis/></>} />
           <Route path="/satış" element={<><Satıs/></>} />
