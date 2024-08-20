@@ -1,46 +1,75 @@
 import React, { useState } from "react";
 import "./ekle.css";
-const Satıs=()=>{
-const [barkod,Setbarkod]=useState("");
-const [list,Setlist]=useState("");
-const handlebarkod=(e)=>{
- Setbarkod(e.target.value);
-};
-const submit=()=>{
-    
-};
 
+const Satıs = () => {
+  const [barkod, setBarkod] = useState("");
+  const [result, setResult] = useState(null); // Initialize as null
 
-const getir=async()=>{
-    const token = localStorage.getItem('token');
-   try {
-    const response=await fetch("http://localhost:3001/satış",{method:"GET",
-     headers:{
-         "Content-Type": "application/json",
-         "giris": "Bearer " + token,
-     }
-    });
-    const result = await response.json();
-    if (result && Array.isArray(result.stufs)) {
-     Setlist(result.stufs); 
-   } else {
-     console.error("Expected 'stufs' array but got:", result);
-     Setlist([]); 
-   }
-   } catch (error) {
-    
-   }
-};
+  const handleBarkod = (e) => {
+    setBarkod(e.target.value);
+  };
 
-    return<div className="_div">
-         <form>
-        <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">barkod </label>
-    <input onChange={handlebarkod} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-    <button onClick={submit} className="btn btn-primary"></button>
-  </div>
-        </form>
+  const fetchBarkod = async (e) => {
+    e.preventDefault();
+    const data = {
+      barkod: barkod,
+    };
+    const token = localStorage.getItem("token");
 
+    try {
+      const response = await fetch("http://localhost:3001/satis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "giris": "Bearer " + token,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const resultt = await response.json();
+        console.log("Received data:", resultt.message); // Log the object
+        setResult(resultt.message);  // Set the product details
+        setBarkod(""); // Clear the input field
+      } else {
+        console.error("Hata:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  return (
+    <div className="_div">
+      <form onSubmit={fetchBarkod}>
+        <div className="mb-3">
+          <label htmlFor="exampleInputEmail1" className="form-label">
+            Barkod
+          </label>
+          <input
+            onChange={handleBarkod}
+            value={barkod}
+            type="text"
+            className="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+          />
+          <button type="submit" className="btn btn-primary">
+            Satış
+          </button>
+        </div>
+      </form>
+      {result && typeof result === 'object' && (
+        <div>
+          <h1>Ürün Detayları</h1>
+          <p><strong>İsim:</strong> {result.isim}</p>
+          <p><strong>Barkod:</strong> {result.barkod}</p>
+          <p><strong>Fiyat:</strong> {result.fiyat}</p>
+          <p><strong>Adet:</strong> {result.adet}</p>
+        </div>
+      )}
     </div>
+  );
 };
+
 export default Satıs;
