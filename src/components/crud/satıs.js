@@ -3,7 +3,8 @@ import "./ekle.css";
 
 const Satıs = () => {
   const [barkod, setBarkod] = useState("");
-  const [result, setResult] = useState(null); // Initialize as null
+  const [result, setResult] = useState(null); 
+  const [message, setMessage] = useState("");
 
   const handleBarkod = (e) => {
     setBarkod(e.target.value);
@@ -11,9 +12,7 @@ const Satıs = () => {
 
   const fetchBarkod = async (e) => {
     e.preventDefault();
-    const data = {
-      barkod: barkod,
-    };
+    const data = { barkod };
     const token = localStorage.getItem("token");
 
     try {
@@ -25,17 +24,28 @@ const Satıs = () => {
         },
         body: JSON.stringify(data),
       });
+      const resultt = await response.json();
 
       if (response.ok) {
-        const resultt = await response.json();
-        console.log("Received data:", resultt.message); // Log the object
-        setResult(resultt.message);  // Set the product details
-        setBarkod(""); // Clear the input field
+        if (resultt.message === "y") {
+          setMessage("Ürün kalmadı.");
+          setResult(null);
+        } else {
+          setResult(resultt.message);  
+          setMessage("Satış başarılı!");
+        }
+        setBarkod("");  
       } else {
-        console.error("Hata:", response.status, response.statusText);
+        if (resultt.message === "Ürün bulunamadı") {
+          setMessage("Ürün bulunamadı.");
+        } else {
+          setMessage("Satış gerçekleştirilemedi, lütfen tekrar deneyin.");
+        }
+        setResult(null);
       }
     } catch (error) {
       console.error("Error:", error);
+      setMessage("Bir hata oluştu.");
     }
   };
 
@@ -68,6 +78,7 @@ const Satıs = () => {
           <p><strong>Adet:</strong> {result.adet}</p>
         </div>
       )}
+      {message && <div className="alert alert-success mt-3">{message}</div>}
     </div>
   );
 };

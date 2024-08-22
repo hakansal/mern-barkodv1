@@ -5,7 +5,7 @@ const Ekle = () => {
   const [isim, Setisim] = useState("");
   const [fiyat, Setfiyat] = useState("");
   const [adet, Setadet] = useState("");
-  const [welcomeMessage, setWelcomeMessage] = useState("");
+  const [ Message, setMessage] = useState("");
 
   const handlebarkod = (e) => {
     Setbarkod(e.target.value);
@@ -40,15 +40,15 @@ const Ekle = () => {
          },
          body: JSON.stringify(data) });
          if(response.ok){
-          const result= await response.json();
-          setWelcomeMessage("kayıt yapıldı");
+           
+          setMessage("kayıt yapıldı");
           Setadet("");
           Setbarkod("");
           Setfiyat("");
           Setisim("");
          }
          else{
-          setWelcomeMessage("hata")
+          setMessage("hata")
           Setadet("");
           Setbarkod("");
           Setfiyat("");
@@ -82,7 +82,7 @@ const Ekle = () => {
 
       <button type="submit" class="btn btn-primary">ekle</button>
     </form>
-    {welcomeMessage && <div className="alert alert-success mt-3">{welcomeMessage}</div>}
+    { Message && <div className="alert alert-success mt-3">{Message}</div>}
   </div>
 }
 export default Ekle;

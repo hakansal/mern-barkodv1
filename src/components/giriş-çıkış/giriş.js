@@ -36,7 +36,7 @@ const Giris = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('API response:', result);
+       
         
         
         setUsername("");
@@ -45,7 +45,7 @@ const Giris = () => {
         localStorage.setItem('token', result.token); 
         
       } else {
-        console.error('API request failed');
+        
       }
     } catch (error) {
       console.error('Error:', error);
