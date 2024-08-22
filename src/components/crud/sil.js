@@ -29,7 +29,7 @@ const Sil = () => {
 
       if (response.ok) {
         setMessage("Ürün silindi veya zaten silinmiş.");
-        setBarkod(""); // Clear the input field
+        setBarkod("");  
       } else if (response.status === 404) {
         setMessage("Ürün bulunamadı.");
       } else {
